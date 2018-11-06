@@ -18,26 +18,26 @@ public class DetailActivity extends AppCompatActivity {
     private static final int DEFAULT_POSITION = -1;
 
 
-    private TextView mAlsoKnownTv;
-    private TextView mAlsoKnownLabel;
-    private TextView mOriginTv;
-    private TextView mOriginLabel;
-    private TextView mDescriptionTv;
-    private TextView mIngredientTv;
-    private ImageView mSandwichIv;
+    private TextView KnownValue;
+    private TextView KnownLabel;
+    private TextView placeofOriginValue;
+    private TextView placeofOriginLabel;
+    private TextView DescriptionValue;
+    private TextView IngredientsValue;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        mSandwichIv = findViewById(R.id.image_iv);
-        mAlsoKnownTv = findViewById(R.id.also_known_tv);
-        mAlsoKnownLabel = findViewById(R.id.alsoKnownAs_label);
-        mOriginTv = findViewById(R.id.origin_tv);
-        mOriginLabel = findViewById(R.id.placeOfOrigin_label);
-        mDescriptionTv = findViewById(R.id.description_tv);
-        mIngredientTv = findViewById(R.id.ingredients_tv);
+        imageView = findViewById(R.id.imageView);
+        KnownValue = findViewById(R.id.KnownValue);
+        KnownLabel = findViewById(R.id.KnownLabel);
+        placeofOriginValue = findViewById(R.id.placeofOriginValue);
+        placeofOriginLabel = findViewById(R.id.placeofOriginLabel);
+        DescriptionValue = findViewById(R.id.DescriptionValue);
+        IngredientsValue = findViewById(R.id.IngredientsValue);
 
 
         Intent intent = getIntent();
@@ -55,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
-        Sandwich sandwich = JsonUtils.parseSandwichJson(json);
+        Sandwich sandwich = JsonUtils.getJsonData(json);
         if (sandwich == null) {
             // Sandwich data unavailable
             closeOnError();
@@ -87,22 +87,22 @@ public class DetailActivity extends AppCompatActivity {
                 stringBuilder.append(", ");
                 stringBuilder.append(sandwich.getAlsoKnownAs().get(i));
             }
-            mAlsoKnownTv.setText(stringBuilder.toString());
+            KnownValue.setText(stringBuilder.toString());
         } else {
-            mAlsoKnownTv.setVisibility(View.GONE);
-            mAlsoKnownLabel.setVisibility(View.GONE);
+            KnownValue.setVisibility(View.GONE);
+            KnownLabel.setVisibility(View.GONE);
         }
 
         // set Text to originTv
         if (sandwich.getPlaceOfOrigin().isEmpty()) {
-            mOriginTv.setVisibility(View.GONE);
-            mOriginLabel.setVisibility(View.GONE);
+            placeofOriginValue.setVisibility(View.GONE);
+            placeofOriginLabel.setVisibility(View.GONE);
         } else {
-            mOriginTv.setText(sandwich.getPlaceOfOrigin());
+            placeofOriginValue.setText(sandwich.getPlaceOfOrigin());
         }
 
         // set Text to descriptionTv
-        mDescriptionTv.setText(sandwich.getDescription());
+        DescriptionValue.setText(sandwich.getDescription());
 
         // set Text to ingredientTv
         if (sandwich.getIngredients() != null && sandwich.getIngredients().size() > 0) {
@@ -115,12 +115,12 @@ public class DetailActivity extends AppCompatActivity {
                 stringBuilder.append("\u2022");
                 stringBuilder.append(sandwich.getIngredients().get(i));
             }
-            mIngredientTv.setText(stringBuilder.toString());
+            IngredientsValue.setText(stringBuilder.toString());
         }
 
         // display the image
         Picasso.with(this)
                 .load(sandwich.getImage())
-                .into(mSandwichIv);
+                .into(imageView);
     }
 }

@@ -15,36 +15,23 @@ public class JsonUtils {
 
     private final static String TAG = JsonUtils.class.getSimpleName();
 
-    private final static String NAME_CODE = "name";
-    private final static String MAIN_NAME_CODE = "mainName";
-    private final static String ALSO_KNOWN_AS_CODE = "alsoKnownAs";
-    private final static String PLACE_OF_ORIGIN_CODE = "placeOfOrigin";
-    private final static String DESCRIPTION_CODE = "description";
-    private final static String IMAGE_CODE = "image";
-    private final static String INGREDIENTS_CODE = "ingredients";
+    private final static String NAME = "name",MAINNAME = "mainName",ALSOKNOWNAS = "alsoKnownAs",PLACEOFORIGIN = "placeOfOrigin";
+    private final static String DESCRIPTION = "description",IMAGE = "image",INGREDIENTS = "ingredients";
 
 
-    public static Sandwich parseSandwichJson(String json) {
+    public static Sandwich getJsonData(String json) {
         try {
-            JSONObject mainJsonObject = new JSONObject(json);
-
-            JSONObject name = mainJsonObject.getJSONObject(NAME_CODE);
-            String mainName = name.getString(MAIN_NAME_CODE);
-
-            JSONArray JSONArrayAlsoKnownAs = name.getJSONArray(ALSO_KNOWN_AS_CODE);
+            JSONObject getJsonMain = new JSONObject(json);
+            JSONArray arrayIngredients = getJsonMain.getJSONArray(INGREDIENTS);
+            List<String> ingredients = convertToListFromJsonArray(arrayIngredients);
+            JSONObject name = getJsonMain.getJSONObject(NAME);
+            String placeOfOrigin = getJsonMain.optString(PLACEOFORIGIN);
+            String description = getJsonMain.getString(DESCRIPTION);
+            String image = getJsonMain.getString(IMAGE);
+            String mainName = name.getString(MAINNAME);
+            JSONArray JSONArrayAlsoKnownAs = name.getJSONArray(ALSOKNOWNAS);
             List<String> alsoKnownAs = convertToListFromJsonArray(JSONArrayAlsoKnownAs);
-
-            String placeOfOrigin = mainJsonObject.optString(PLACE_OF_ORIGIN_CODE);
-
-            String description = mainJsonObject.getString(DESCRIPTION_CODE);
-
-            String image = mainJsonObject.getString(IMAGE_CODE);
-
-            JSONArray JSONArrayIngredients = mainJsonObject.getJSONArray(INGREDIENTS_CODE);
-            List<String> ingredients = convertToListFromJsonArray(JSONArrayIngredients);
-
             return new Sandwich(mainName, alsoKnownAs, placeOfOrigin, description, image, ingredients);
-
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
